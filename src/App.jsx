@@ -1,9 +1,21 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+
 function App() {
   const [backendStatus, setBackendStatus] = useState("Checking...");
   const [apiMetrics, setApiMetrics] = useState(null);
+  const [history, setHistory] = useState([]);
 
 useEffect(() => {
   const checkBackend = () => {
@@ -51,10 +63,20 @@ useEffect(() => {
   const [alerts, setAlerts] = useState([]);
   const [lastUpdated, setLastUpdated] = useState(new Date());
 
- useEffect(() => {
+
+useEffect(() => {
   if (apiMetrics) {
     setMetrics(apiMetrics);
     setLastUpdated(new Date());
+
+    setHistory((previousHistory) => [
+      ...previousHistory,
+      {
+        time: new Date().toLocaleTimeString(),
+        cpu: apiMetrics.cpu,
+        memory: apiMetrics.memory,
+      },
+    ].slice(-10));
   }
 }, [apiMetrics]);
 
@@ -141,7 +163,41 @@ useEffect(() => {
           </div>
         </section>
 
-        <section className="monitor">
+        
+<section className="monitor">
+  <h2>{"CPU & Memory Usage"}</h2>
+  <p>Recent readings update every 3 seconds.</p>
+
+  <div style={{ width: "100%", height: 300 }}>
+    <ResponsiveContainer width="100%" height="100%">
+      <LineChart data={history}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="time" />
+        <YAxis domain={[0, 100]} />
+        <Tooltip />
+        <Legend />
+        <Line
+          type="monotone"
+          dataKey="cpu"
+          name="CPU (%)"
+          stroke="#2563eb"
+        />
+        <Line
+          type="monotone"
+          dataKey="memory"
+          name="Memory (%)"
+          stroke="#16a34a"
+        />
+      </LineChart>
+    </ResponsiveContainer>
+  </div>
+</section>
+
+
+
+
+        <section className="monitor">        
+
           <h2>Monitoring Status</h2>
 
           <div className="monitor-row">
