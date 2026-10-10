@@ -19,7 +19,7 @@ function App() {
 
 useEffect(() => {
   const checkBackend = () => {
-    fetch("http://localhost:3000/health")
+    fetch("https://cloudpulse-nsg2.onrender.com/health")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Server error");
@@ -29,7 +29,7 @@ useEffect(() => {
       .then((data) => setBackendStatus(data.status))
       .catch(() => setBackendStatus("Offline"));
 
-    fetch("http://localhost:3000/metrics")
+    fetch("https://cloudpulse-nsg2.onrender.com/metrics")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Metrics error");
