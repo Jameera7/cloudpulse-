@@ -23,15 +23,24 @@ timestamp: new Date().toISOString(),
 });
 });
 
+
 app.get("/metrics", (req, res) => {
+  const startTime = performance.now();
+
+  const cpuUsage = Math.floor(Math.random() * 60) + 20;
+  const memoryUsage = Math.floor(Math.random() * 50) + 30;
+
+  const responseTime = performance.now() - startTime;
+
   res.json({
-    cpuUsage: Math.floor(Math.random() * 60) + 20,
-    memoryUsage: Math.floor(Math.random() * 50) + 30,
-    responseTime: Math.floor(Math.random() * 200) + 100,
+    cpuUsage,
+    memoryUsage,
+    responseTime: Number(responseTime.toFixed(2)),
     uptime: process.uptime(),
     timestamp: new Date().toISOString(),
   });
 });
+
 
 app.listen(PORT, () => {
 console.log(`CloudPulse server running at http://localhost:${PORT}`);
